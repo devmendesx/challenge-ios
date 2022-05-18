@@ -5,7 +5,7 @@ target 'App Lodjinha' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
   pod 'Alamofire'
-
+  pod 'iCarousel', '~> 1.8'
   # Pods for App Lodjinha
 
 end
