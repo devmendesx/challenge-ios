@@ -8,6 +8,7 @@
 import Foundation
 
 struct Product: Codable {
+    let categoria: Category
     let id: Int
     let descricao: String
     let nome: String
@@ -17,7 +18,5 @@ struct Product: Codable {
 }
 
 struct ProductsData: Codable {
-    let products: [Product]
-    let offset: Int
-    let total: Int
+    let data: [Product]
 }

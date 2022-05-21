@@ -38,10 +38,36 @@ class NetworkManager {
         }
     }
     
+    
+    func fetchProducts(url: String, onComplete: @escaping ([ProductsViewModel]) -> Void){
+        AF.request(url, method: .get).response { response in
+            switch response.result {
+                case .success(let response):
+                    if let products = self.parsingProductsJSON(with: response!) {
+                        onComplete(products.data.map({
+                            ProductsViewModel(descricao: $0.descricao, nome: $0.nome, precoDe: $0.precoDe, precoPor: $0.precoPor, urlImagem: $0.urlImagem)
+                        }))
+                    }
+                case .failure(let error):
+                    print("\(error)")
+            }
+        }
+    }
+    
+    func parsingProductsJSON(with data: Data) -> ProductsData? {
+        do {
+            let products = try JSONDecoder().decode(ProductsData.self, from: data)
+            return products
+        }catch{
+            print(error)
+            return nil
+        }
+    }
+    
     func parsingBannerJSON(with data: Data) -> BannersData?{
         do {
-            let viewModel = try JSONDecoder().decode(BannersData.self, from: data)
-            return viewModel
+            let banners = try JSONDecoder().decode(BannersData.self, from: data)
+            return banners
         }catch{
             print(error)
             return nil
@@ -50,8 +76,8 @@ class NetworkManager {
     
     func parsingCategoriesJSON(with data: Data) -> CategoriesData? {
         do{
-            let categoriesViewModel = try JSONDecoder().decode(CategoriesData.self, from: data)
-            return categoriesViewModel
+            let categories = try JSONDecoder().decode(CategoriesData.self, from: data)
+            return categories
         }catch{
             print(error)
             return nil

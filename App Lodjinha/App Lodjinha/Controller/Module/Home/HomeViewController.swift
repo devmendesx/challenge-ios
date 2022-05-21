@@ -14,27 +14,35 @@ class HomeViewController: UIViewController{
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var bannersICarousel: iCarousel!
     @IBOutlet weak var categoriesCollectionView: UICollectionView!
+    @IBOutlet weak var bestSellerTableView: UITableView!
     
     let goToSubmarino: String = "https://www.submarino.com.br/"
     
     var imageUrls: [String] = []
     var categoriesViewModel: [CategoryViewModel?] = []
+    var productsViewModel: [ProductsViewModel?] = []
     
     let networkManager: NetworkManager = NetworkManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        bannersICarousel.delegate = self
-        bannersICarousel.dataSource = self
-        bannersICarousel.bounces = false
+        self.bannersICarousel.delegate = self
+        self.bannersICarousel.dataSource = self
+        self.bannersICarousel.bounces = false
         
-        categoriesCollectionView.delegate = self
-        categoriesCollectionView.dataSource = self
+        self.categoriesCollectionView.delegate = self
+        self.categoriesCollectionView.dataSource = self
         
+        self.bestSellerTableView.delegate = self
+        self.bestSellerTableView.dataSource = self
         self.categoriesCollectionView.register(UINib(nibName: "CategoriesCollectionViewCell", bundle: .main), forCellWithReuseIdentifier: "CategoriesCollectionViewCell")
+        
+        self.bestSellerTableView.register(UINib(nibName: "BestSellerTableViewCell", bundle: .main), forCellReuseIdentifier: "BestSellerTableViewCell")
         
         self.loadAllHomeViewDependencies()
         self.setHomeViewAppearance()
+        
+        
     }
     
     func setHomeViewAppearance(){
@@ -58,6 +66,14 @@ class HomeViewController: UIViewController{
             guard let self = self else { return }
             self.categoriesViewModel = categories
             self.categoriesCollectionView.reloadData()
+        }
+        
+        self.networkManager.fetchProducts(url: Lodjinha.Product.GET_MORE_SOLD.value()) { [weak self] products in
+            guard let self = self else { return }
+            
+            self.productsViewModel = products
+            self.bestSellerTableView.reloadData()
+            self.bestSellerTableView.bounces = false
         }
         
     }
@@ -109,8 +125,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         if let category: CategoryViewModel = self.categoriesViewModel[indexPath.row] {
             
-            cell.categorieLabelName.text = category.descricao
-            
             DispatchQueue.global(qos: .userInitiated).async {
                 
                 if let imageURL = URL(string: category.urlImagem!) {
@@ -118,6 +132,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
                         DispatchQueue.main.async {
                             let image = UIImage(data: data)
                             cell.categorieImageView.image = image
+                            cell.categorieLabelName.text = category.descricao
                         }
                     }
                 }
@@ -127,5 +142,50 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         return cell
     }
+    
+}
+
+extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        self.productsViewModel.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: BestSellerTableViewCell = bestSellerTableView.dequeueReusableCell(withIdentifier: "BestSellerTableViewCell", for: indexPath) as! BestSellerTableViewCell
+        
+        
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.frame = cell.bounds
+        cell.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        
+        if let product: ProductsViewModel = self.productsViewModel[indexPath.row] {
+            
+            DispatchQueue.global(qos: .userInitiated).async {
+                
+                if let nome = product.nome, let descricao = product.descricao, let urlImagem = product.urlImagem, let precoPor = product.precoPor, let precoDe = product.precoDe {
+
+                    if let imageURL = URL(string: urlImagem) {
+                        if let data = try? Data(contentsOf: imageURL){
+                            DispatchQueue.main.async {
+                                let image: UIImage? = UIImage(data: data)
+                                cell.productImage.image = image
+                                cell.productName.text = nome
+                                cell.productDescription.text = descricao
+                                cell.productLastPrice.text = String(format: "R$ %.2f", precoDe)
+                                cell.productPrice.text = String(format: "R$ %.2f", precoPor)
+                            }
+                        }
+                    }
+                }
+            }
+            
+            
+        }
+        activityIndicator.stopAnimating()
+        activityIndicator.removeFromSuperview()
+        return cell
+    }
+    
     
 }
