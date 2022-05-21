@@ -11,6 +11,7 @@ struct Lodjinha {
     static let baseURL: String = "https://alodjinha.herokuapp.com"
     
     enum Product: String {
+        
         case GET
         case GET_MORE_SOLD
         case GET_OR_POST
@@ -28,6 +29,7 @@ struct Lodjinha {
     }
     
     enum Category: String {
+    
         case GET
         
         func value() -> String{
@@ -39,6 +41,7 @@ struct Lodjinha {
     }
     
     enum Banner: String {
+        
         case GET
         
         func value() -> String{

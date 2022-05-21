@@ -13,10 +13,13 @@ class HomeViewController: UIViewController{
     @IBOutlet weak var loadingIcon: UIActivityIndicatorView!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var bannersICarousel: iCarousel!
+    @IBOutlet weak var categoriesCollectionView: UICollectionView!
     
     let goToSubmarino: String = "https://www.submarino.com.br/"
     
     var imageUrls: [String] = []
+    var categoriesViewModel: [CategoryViewModel?] = []
+    
     let networkManager: NetworkManager = NetworkManager()
     
     override func viewDidLoad() {
@@ -24,7 +27,13 @@ class HomeViewController: UIViewController{
         bannersICarousel.delegate = self
         bannersICarousel.dataSource = self
         bannersICarousel.bounces = false
-        self.load()
+        
+        categoriesCollectionView.delegate = self
+        categoriesCollectionView.dataSource = self
+        
+        self.categoriesCollectionView.register(UINib(nibName: "CategoriesCollectionViewCell", bundle: .main), forCellWithReuseIdentifier: "CategoriesCollectionViewCell")
+        
+        self.loadAllHomeViewDependencies()
         self.setHomeViewAppearance()
     }
     
@@ -32,7 +41,7 @@ class HomeViewController: UIViewController{
         self.navigationItem.titleView = UIImageView(image: UIImage(named: "logoNavbar_2")!)
     }
     
-    func load() {
+    func loadAllHomeViewDependencies() {
         self.networkManager.fetchBanners(onComplete: { [weak self] urls in
             guard let self = self else { return }
             self.imageUrls = urls
@@ -44,6 +53,13 @@ class HomeViewController: UIViewController{
             self.loadingIcon.stopAnimating()
             self.loadingIcon.isHidden = true
         })
+        
+        self.networkManager.fetchCategories { [weak self] categories in
+            guard let self = self else { return }
+            self.categoriesViewModel = categories
+            self.categoriesCollectionView.reloadData()
+        }
+        
     }
 }
 extension HomeViewController: iCarouselDelegate, iCarouselDataSource {
@@ -79,6 +95,37 @@ extension HomeViewController: iCarouselDelegate, iCarouselDataSource {
     
     func carouselDidEndScrollingAnimation(_ carousel: iCarousel) {
         self.pageControl.currentPage = carousel.currentItemIndex
+    }
+    
+}
+
+extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.categoriesViewModel.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell: CategoriesCollectionViewCell = categoriesCollectionView.dequeueReusableCell(withReuseIdentifier: "CategoriesCollectionViewCell", for: indexPath) as! CategoriesCollectionViewCell
+        
+        if let category: CategoryViewModel = self.categoriesViewModel[indexPath.row] {
+            
+            cell.categorieLabelName.text = category.descricao
+            
+            DispatchQueue.global(qos: .userInitiated).async {
+                
+                if let imageURL = URL(string: category.urlImagem!) {
+                    if let data = try? Data(contentsOf: imageURL){
+                        DispatchQueue.main.async {
+                            let image = UIImage(data: data)
+                            cell.categorieImageView.image = image
+                        }
+                    }
+                }
+            }
+            
+        }
+        
+        return cell
     }
     
 }

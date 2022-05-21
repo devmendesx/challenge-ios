@@ -14,6 +14,6 @@ struct Category: Codable {
 }
 
 struct CategoriesData: Codable {
-    let categories: [Category]
+    let data: [Category]
 }
 

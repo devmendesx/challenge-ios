@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CategoriesCollectionViewCell" id="gTV-IL-0wX" customClass="CategoriesCollectionViewCell" customModule="App_Lodjinha" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="145" height="93"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="145" height="93"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ahd-Aq-Xlt">
+                        <rect key="frame" x="0.0" y="0.0" width="145" height="93"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="AWX-F3-xhn">
+                                <rect key="frame" x="23" y="6" width="88" height="63"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="63" id="ReO-rp-U7z"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Yp-HW-DIw">
+                                <rect key="frame" x="23" y="68" width="99" height="25"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="7Yp-HW-DIw" secondAttribute="trailing" constant="23" id="8mq-kl-sJc"/>
+                            <constraint firstAttribute="bottom" secondItem="7Yp-HW-DIw" secondAttribute="bottom" id="G5c-Xc-dW1"/>
+                            <constraint firstItem="7Yp-HW-DIw" firstAttribute="leading" secondItem="ahd-Aq-Xlt" secondAttribute="leading" constant="23" id="HOe-Jm-Uog"/>
+                            <constraint firstAttribute="trailing" secondItem="AWX-F3-xhn" secondAttribute="trailing" constant="34" id="M4C-38-VcA"/>
+                            <constraint firstAttribute="bottom" secondItem="7Yp-HW-DIw" secondAttribute="bottom" id="c3c-xS-YEH"/>
+                            <constraint firstItem="AWX-F3-xhn" firstAttribute="leading" secondItem="7Yp-HW-DIw" secondAttribute="leading" id="fwB-ad-uGc"/>
+                            <constraint firstItem="AWX-F3-xhn" firstAttribute="top" secondItem="ahd-Aq-Xlt" secondAttribute="top" constant="6" id="gzJ-4n-rdc"/>
+                            <constraint firstItem="7Yp-HW-DIw" firstAttribute="top" secondItem="AWX-F3-xhn" secondAttribute="bottom" constant="-1" id="h4r-GN-CoB"/>
+                            <constraint firstItem="AWX-F3-xhn" firstAttribute="leading" secondItem="ahd-Aq-Xlt" secondAttribute="leading" constant="23" id="n32-e0-6Ol"/>
+                            <constraint firstAttribute="bottom" secondItem="7Yp-HW-DIw" secondAttribute="bottom" id="qj6-8G-8fs"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="ahd-Aq-Xlt" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="7bk-cN-fD0"/>
+                <constraint firstItem="ahd-Aq-Xlt" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="V7q-y4-cSk"/>
+                <constraint firstAttribute="bottom" secondItem="ahd-Aq-Xlt" secondAttribute="bottom" id="eJS-mM-oCb"/>
+                <constraint firstAttribute="trailing" secondItem="ahd-Aq-Xlt" secondAttribute="trailing" id="pQX-ws-mx7"/>
+            </constraints>
+            <size key="customSize" width="145" height="93"/>
+            <connections>
+                <outlet property="categorieImageView" destination="AWX-F3-xhn" id="44T-iD-VjV"/>
+                <outlet property="categorieLabelName" destination="7Yp-HW-DIw" id="Bd4-tt-sDn"/>
+            </connections>
+            <point key="canvasLocation" x="207.97101449275365" y="96.763392857142847"/>
+        </collectionViewCell>
+    </objects>
+</document>
