@@ -8,6 +8,7 @@
 import Foundation
 
 struct ProductsViewModel {
+    let id: Int?
     let descricao: String?
     let nome: String?
     let precoDe: Double?

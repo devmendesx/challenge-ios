@@ -78,6 +78,7 @@ class HomeViewController: UIViewController{
         
     }
 }
+
 extension HomeViewController: iCarouselDelegate, iCarouselDataSource {
     func numberOfItems(in carousel: iCarousel) -> Int {
         self.imageUrls.count
@@ -86,15 +87,7 @@ extension HomeViewController: iCarouselDelegate, iCarouselDataSource {
     func carousel(_ carousel: iCarousel, viewForItemAt index: Int, reusing view: UIView?) -> UIView {
         let imageView = UIImageView()
         
-        DispatchQueue.global(qos: .userInitiated).async {
-            if let imageURL = URL(string: self.imageUrls[index]) {
-                if let data = try? Data(contentsOf: imageURL){
-                    DispatchQueue.main.async {
-                        imageView.image = UIImage(data: data)
-                    }
-                }
-            }
-        }
+        imageView.kf.setImage(with: URL(string: self.imageUrls[index]))
         
         imageView.frame = bannersICarousel.frame
         imageView.contentMode = .scaleAspectFill
@@ -124,20 +117,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let cell: CategoriesCollectionViewCell = categoriesCollectionView.dequeueReusableCell(withReuseIdentifier: "CategoriesCollectionViewCell", for: indexPath) as! CategoriesCollectionViewCell
         
         if let category: CategoryViewModel = self.categoriesViewModel[indexPath.row] {
-            
-            DispatchQueue.global(qos: .userInitiated).async {
-                
-                if let imageURL = URL(string: category.urlImagem!) {
-                    if let data = try? Data(contentsOf: imageURL){
-                        DispatchQueue.main.async {
-                            let image = UIImage(data: data)
-                            cell.categorieImageView.image = image
-                            cell.categorieLabelName.text = category.descricao
-                        }
-                    }
-                }
-            }
-            
+            cell.setup(categoryVM: category)
         }
         
         return cell
@@ -153,39 +133,13 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: BestSellerTableViewCell = bestSellerTableView.dequeueReusableCell(withIdentifier: "BestSellerTableViewCell", for: indexPath) as! BestSellerTableViewCell
         
-        
-        let activityIndicator = UIActivityIndicatorView()
-        activityIndicator.frame = cell.bounds
-        cell.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
-        
         if let product: ProductsViewModel = self.productsViewModel[indexPath.row] {
-            
-            DispatchQueue.global(qos: .userInitiated).async {
-                
-                if let nome = product.nome, let descricao = product.descricao, let urlImagem = product.urlImagem, let precoPor = product.precoPor, let precoDe = product.precoDe {
-
-                    if let imageURL = URL(string: urlImagem) {
-                        if let data = try? Data(contentsOf: imageURL){
-                            DispatchQueue.main.async {
-                                let image: UIImage? = UIImage(data: data)
-                                cell.productImage.image = image
-                                cell.productName.text = nome
-                                cell.productDescription.text = descricao
-                                cell.productLastPrice.text = String(format: "R$ %.2f", precoDe)
-                                cell.productPrice.text = String(format: "R$ %.2f", precoPor)
-                            }
-                        }
-                    }
-                }
-            }
-            
-            
+            cell.setup(productVM: product)
         }
-        activityIndicator.stopAnimating()
-        activityIndicator.removeFromSuperview()
         return cell
     }
     
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+    }
 }

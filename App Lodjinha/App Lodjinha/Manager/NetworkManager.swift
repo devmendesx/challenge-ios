@@ -45,7 +45,7 @@ class NetworkManager {
                 case .success(let response):
                     if let products = self.parsingProductsJSON(with: response!) {
                         onComplete(products.data.map({
-                            ProductsViewModel(descricao: $0.descricao, nome: $0.nome, precoDe: $0.precoDe, precoPor: $0.precoPor, urlImagem: $0.urlImagem)
+                            ProductsViewModel(id: $0.id, descricao: $0.descricao, nome: $0.nome, precoDe: $0.precoDe, precoPor: $0.precoPor, urlImagem: $0.urlImagem)
                         }))
                     }
                 case .failure(let error):
